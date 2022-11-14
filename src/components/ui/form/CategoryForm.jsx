@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import Input from "../input/Input";
 import InputFile from "../input/InputFile";
-import { useRemoveVietnamTones } from "../../../hooks/useRemoveVietnamTone";
 import { db, storage } from "../../../configs/firebase-configs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
@@ -19,6 +18,7 @@ const CategoryForm = ({ type }) => {
 
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState({});
+  const watchPath = watch("path");
 
   // custom hook
   const [handleAddDoc] = useAddDoc();
@@ -92,11 +92,13 @@ const CategoryForm = ({ type }) => {
             control={control}
             disabled={type === "update" ? true : false}
           />
-          <InputFile
-            display="Hình ảnh"
-            name="image"
-            onChange={handleInputChange}
-          />
+          {watchPath && (
+            <InputFile
+              display="Hình ảnh"
+              name="image"
+              onChange={handleInputChange}
+            />
+          )}
         </div>
         <div className="w-full flex items-center mt-8">
           <button
