@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CategoryItem,
   CategoryList,
 } from "../../components/ui/category/Category";
 import Checkbox from "../../components/ui/input/Checkbox";
+import Editor from "../../components/ui/input/Editor";
 import Input from "../../components/ui/input/Input";
 import InputFile from "../../components/ui/input/InputFile";
 import { ProductItem, ProductList } from "../../components/ui/product/Product";
