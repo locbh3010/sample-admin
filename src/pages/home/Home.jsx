@@ -3,6 +3,7 @@ import {
   CategoryItem,
   CategoryList,
 } from "../../components/ui/category/Category";
+import Input from "../../components/ui/input/Input";
 import { ProductItem, ProductList } from "../../components/ui/product/Product";
 import HomeHeader from "./header/HomeHeader";
 
