@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const InputFile = ({ name, display, ...props }) => {
   return (
@@ -21,6 +22,11 @@ const InputFile = ({ name, display, ...props }) => {
       </span>
     </div>
   );
+};
+
+InputFile.propTypes = {
+  name: PropTypes.string.isRequired,
+  display: PropTypes.string,
 };
 
 export default InputFile;
