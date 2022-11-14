@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Pencil from "../../icon/Pencil";
 import Trash from "../../icon/Trash";
-import Button from "../button/Button";
 
 export function ProductList({ children }) {
   return (
@@ -14,7 +13,7 @@ export function ProductList({ children }) {
 
 export function ProductItem() {
   return (
-    <div className="w-full rounded-lg bg-white shadow flex flex-col relative">
+    <div className="w-full rounded-lg bg-white shadow flex flex-col relative duration-300 hover:shadow-xl">
       <div className="absolute top-2 left-2 bg-white/25 rounded text-white z-50 font-bold w-10 h-10 flex-center text-lg">
         50
       </div>

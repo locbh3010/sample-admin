@@ -23,8 +23,8 @@ const Button = ({
 };
 
 Button.propTypes = {
-  type: PropTypes.oneOf(["button", "submit"]).isRequired,
-  variant: PropTypes.oneOf(["update", "remove"]).isRequired,
+  type: PropTypes.oneOf(["button", "submit"]),
+  variant: PropTypes.oneOf(["update", "remove"]),
 };
 
 export default Button;
