@@ -19,6 +19,9 @@
   .btn-remove {
     @apply bg-red-500 flex-center text-white w-10 h-10 cursor-pointer rounded duration-300 hover:bg-red-400;
   }
+  input:disabled {
+    @apply bg-gray-300 text-gray-500 select-none border-gray-400 opacity-70;
+  }
 }
 
 @layer utilities {

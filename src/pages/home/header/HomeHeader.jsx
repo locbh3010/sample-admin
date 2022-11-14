@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Block = ({ slug, display, color }) => {
+  const navigate = useNavigate();
   return (
     <div
       onClick={() => navigate(`/${slug}`)}
@@ -17,10 +18,8 @@ const Block = ({ slug, display, color }) => {
 };
 
 const HomeHeader = () => {
-  const navigate = useNavigate();
   return (
     <div>
-      {/* thong ke san pham */}
       <div className="container">
         <div className="p-4">
           <div className="grid grid-cols-4 gap-6">

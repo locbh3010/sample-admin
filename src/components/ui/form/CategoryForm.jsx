@@ -4,26 +4,33 @@ import PropTypes from "prop-types";
 import Input from "../input/Input";
 import InputFile from "../input/InputFile";
 import { useRemoveVietnamTones } from "../../../hooks/useRemoveVietnamTone";
-import { storage } from "../../../configs/firebase-configs";
+import { db, storage } from "../../../configs/firebase-configs";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useAddDoc } from "../../../hooks/firestore-hook";
+import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { useParams } from "react-router-dom";
 
 const CategoryForm = ({ type }) => {
-  const { control, handleSubmit, getValues, setValue } = useForm({
+  const { control, handleSubmit, getValues, setValue, watch } = useForm({
     mode: onchange,
   });
-  const [removeTones] = useRemoveVietnamTones();
-  const [handleAddDoc] = useAddDoc();
+
+  const { id } = type === "update" && useParams();
+
   const [image, setImage] = useState(null);
+  const [category, setCategory] = useState({});
+
+  // custom hook
+  const [handleAddDoc] = useAddDoc();
+  const [handleUpdate] = useUpdateDoc();
 
   const handleUploadImage = (file) => {
     if (file) {
-      const path = removeTones(getValues("name")).toLowerCase();
+      const path = getValues("path");
       const storageRef = ref(storage, `images/${path}/${file.name}`);
       uploadBytes(storageRef, file).then(async (snapshot) => {
         const downloadURL = await getDownloadURL(snapshot.ref);
         setValue("image", downloadURL);
-        setValue("path", path);
         setImage(downloadURL);
       });
     }
@@ -32,13 +39,35 @@ const CategoryForm = ({ type }) => {
     handleAddDoc("categories", values);
   };
   const handleUpdateCategory = (values) => {
-    console.log("update");
+    const updateData = {
+      path: "categories",
+      id,
+      data: values,
+    };
+    handleUpdate(updateData);
   };
 
   const handleInputChange = (e) => {
     const file = e.target.files[0];
     if (file) handleUploadImage(file);
   };
+
+  useEffect(() => {
+    if (type === "update" && id) {
+      const docRef = doc(collection(db, "categories"), id);
+      onSnapshot(docRef, async (res) => {
+        const data = await res.data();
+
+        await setCategory(data);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    for (const key in category) {
+      setValue(key, category[key]);
+    }
+  }, [category]);
 
   return (
     <form
@@ -55,6 +84,13 @@ const CategoryForm = ({ type }) => {
             placeholder="Nhập tên danh mục"
             display="Tên danh mục"
             control={control}
+          />
+          <Input
+            name="path"
+            placeholder="Nhập vào path image"
+            display="Folder lưu ảnh"
+            control={control}
+            disabled={type === "update" ? true : false}
           />
           <InputFile
             display="Hình ảnh"

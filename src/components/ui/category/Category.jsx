@@ -1,9 +1,10 @@
 import React from "react";
 import Pencil from "../../icon/Pencil";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import Trash from "../../icon/Trash";
 import PropTypes from "prop-types";
+import { useDeleteDoc } from "../../../hooks/firestore-hook";
 
 export const CategoryList = ({ children }) => {
   return (
@@ -13,12 +14,15 @@ export const CategoryList = ({ children }) => {
   );
 };
 
-export const CategoryItem = ({ data }) => {
+export const CategoryItem = React.memo(({ data }) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate(`/category/${data.id}`);
   };
-  const handleDeleteCategory = () => {};
+  const [handleRemove] = useDeleteDoc();
+  const handleDeleteCategory = () => {
+    handleRemove("categories", data.id, data.path);
+  };
 
   return (
     <div className="flex bg-white rounded-lg shadow w-full duration-300 hover:shadow-lg">
@@ -45,7 +49,7 @@ export const CategoryItem = ({ data }) => {
       </div>
     </div>
   );
-};
+});
 
 CategoryItem.propTypes = {
   data: PropTypes.object.isRequired,

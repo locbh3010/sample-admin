@@ -1,12 +1,34 @@
-import React from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
   CategoryItem,
   CategoryList,
 } from "../../components/ui/category/Category";
 import { ProductItem, ProductList } from "../../components/ui/product/Product";
+import { db } from "../../configs/firebase-configs";
 import HomeHeader from "./header/HomeHeader";
 
 const Home = () => {
+  const cateRef = collection(db, "categories");
+  const [state, setState] = useState({
+    categories: [],
+  });
+
+  useEffect(() => {
+    onSnapshot(cateRef, (response) => {
+      const docs = response.docs;
+      let temp = [];
+
+      if (docs && docs.length > 0) {
+        docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+        setState({
+          ...state,
+          categories: temp,
+        });
+      }
+    });
+  }, []);
+
   return (
     <div>
       <HomeHeader />
@@ -17,7 +39,10 @@ const Home = () => {
         </h4>
         <div className="py-6">
           <CategoryList>
-            <CategoryItem />
+            {state.categories?.length > 0 &&
+              state.categories.map((category) => (
+                <CategoryItem key={category.id} data={category} />
+              ))}
           </CategoryList>
         </div>
       </div>
