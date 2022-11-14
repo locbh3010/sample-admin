@@ -5,6 +5,7 @@ import {
 } from "../../components/ui/category/Category";
 import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
+import InputFile from "../../components/ui/input/InputFile";
 import { ProductItem, ProductList } from "../../components/ui/product/Product";
 import HomeHeader from "./header/HomeHeader";
 
