@@ -3,7 +3,9 @@ import {
   CategoryItem,
   CategoryList,
 } from "../../components/ui/category/Category";
+import Checkbox from "../../components/ui/input/Checkbox";
 import Input from "../../components/ui/input/Input";
+import InputFile from "../../components/ui/input/InputFile";
 import { ProductItem, ProductList } from "../../components/ui/product/Product";
 import HomeHeader from "./header/HomeHeader";
 
@@ -12,8 +14,8 @@ const Home = () => {
     <div>
       <HomeHeader />
       {/* danh mục nổi bật */}
-      <div className="container">
-        <h4 className="text-3xl font-semibold leading-normal mt-0 mb-2 text-slate-800">
+      <div className="container dark:bg-black">
+        <h4 className="text-3xl font-semibold leading-normal mt-0 mb-2 text-slate-800 dark:text-white">
           Danh mục nổi bật
         </h4>
         <div className="py-6">
