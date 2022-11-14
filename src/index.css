@@ -14,7 +14,7 @@
 
 @layer components {
   .btn-update {
-    @apply bg-blue-500 text-white rounded w-10 h-10 cursor-pointer flex-center duration-300 hover:bg-blue-400;
+    @apply bg-blue-500 text-white rounded w-10 h-10 cursor-pointer flex-center duration-300 hover:bg-blue-400 block;
   }
   .btn-remove {
     @apply bg-red-500 flex-center text-white w-10 h-10 cursor-pointer rounded duration-300 hover:bg-red-400;

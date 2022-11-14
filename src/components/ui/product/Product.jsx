@@ -31,9 +31,7 @@ export function ProductItem() {
         <span className="text-sm text-blue-500 font-bold mb-0.5 py-1 px-2 bg-gray-800/10 rounded">
           categories name
         </span>
-        <p className="font-bold text-2xl capitalize line-clamp-1">
-          name product
-        </p>
+        <p className="font-bold text-2xl capitalize line-clamp-1">name</p>
         <span className="text-gray-500 line-clamp-3 font-medium mb-4">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
           asperiores aspernatur architecto obcaecati illum, unde soluta

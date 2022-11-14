@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const InputFile = ({ name, display, ...props }) => {
   return (
@@ -13,7 +14,7 @@ const InputFile = ({ name, display, ...props }) => {
         type="file"
         name={name}
         id={name}
-        className="appearance-none file:outline-none bg-gray-50 border border-gray-400 rounded file:border-none file:bg-slate-900 file:px-8 file:py-3 file:text-white file:mr-5 "
+        className="appearance-none file:outline-none bg-gray-300 text-slate-900 border border-gray-400 rounded file:border-none file:bg-slate-900 file:px-8 file:py-4 duration-300 focus:bg-transparent file:text-white file:mr-5 "
         {...props}
       />
       <span className="text-sm text-gray-500 dark:text-gray-300 -mt-1">
@@ -21,6 +22,11 @@ const InputFile = ({ name, display, ...props }) => {
       </span>
     </div>
   );
+};
+
+InputFile.propTypes = {
+  name: PropTypes.string.isRequired,
+  display: PropTypes.string,
 };
 
 export default InputFile;

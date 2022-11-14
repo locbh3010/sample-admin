@@ -1,7 +1,12 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Button = ({ type = "button", variant, children, props }) => {
+const Button = ({
+  type = "button",
+  variant = "update",
+  children,
+  ...props
+}) => {
   return (
     <button
       type={type}
@@ -15,6 +20,11 @@ const Button = ({ type = "button", variant, children, props }) => {
       {children}
     </button>
   );
+};
+
+Button.propTypes = {
+  type: PropTypes.oneOf(["button", "submit"]).isRequired,
+  variant: PropTypes.oneOf(["update", "remove"]).isRequired,
 };
 
 export default Button;
