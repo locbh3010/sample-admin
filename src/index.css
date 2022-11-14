@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-gray-200;
+  }
+
+  .container {
+    @apply mx-auto max-w-full w-[1240px] px-5;
+  }
+}
+
+@layer components {
+  .btn-update {
+    @apply bg-blue-500 text-white rounded w-10 h-10 cursor-pointer flex-center duration-300 hover:bg-blue-400;
+  }
+  .btn-remove {
+    @apply bg-red-500 flex-center text-white w-10 h-10 cursor-pointer rounded duration-300 hover:bg-red-400;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}
