@@ -1,11 +1,11 @@
 import React from "react";
 import { useController } from "react-hook-form";
 
-const Select = ({ name, defaultValue = "", control, children, ...props }) => {
+const Select = ({ name, control, children, ...props }) => {
   const {} = useController({
     name,
     control,
-    defaultValue,
+    defaultValue: "test",
   });
   return (
     <select

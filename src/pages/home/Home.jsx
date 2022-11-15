@@ -11,10 +11,8 @@ import HomeHeader from "./header/HomeHeader";
 const Home = () => {
   const cateRef = collection(db, "categories");
   const productRef = collection(db, "products");
-  const [state, setState] = useState({
-    categories: [],
-    products: [],
-  });
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     onSnapshot(cateRef, (response) => {
@@ -23,10 +21,7 @@ const Home = () => {
 
       if (docs && docs.length > 0) {
         docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
-        setState({
-          ...state,
-          categories: temp,
-        });
+        setCategories(temp);
       }
     });
     onSnapshot(productRef, (res) => {
@@ -35,10 +30,7 @@ const Home = () => {
 
       docs?.length > 0 &&
         docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
-      setState({
-        ...state,
-        products: temp,
-      });
+      setProducts(temp);
     });
   }, []);
 
@@ -52,8 +44,8 @@ const Home = () => {
         </h4>
         <div className="py-6">
           <CategoryList>
-            {state.categories?.length > 0 &&
-              state.categories.map((category) => (
+            {categories?.length > 0 &&
+              categories.map((category) => (
                 <CategoryItem key={category.id} data={category} />
               ))}
           </CategoryList>
@@ -66,8 +58,8 @@ const Home = () => {
           Sản phẩm nổi bật
         </h4>
         <ProductList>
-          {state.products?.length > 0 &&
-            state.products.map((product) => (
+          {products?.length > 0 &&
+            products.map((product) => (
               <ProductItem key={product.id} data={product} />
             ))}
         </ProductList>

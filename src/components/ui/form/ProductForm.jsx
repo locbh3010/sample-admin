@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import PropTypes from "prop-types";
 import Select from "../input/Select";
 import { db, storage } from "../../../configs/firebase-configs";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 import Input from "../input/Input";
 import Editor from "../input/Editor";
 import InputFile from "../input/InputFile";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useAddDoc } from "../../../hooks/firestore-hook";
+import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
+import { useParams } from "react-router-dom";
 
 const ProductForm = ({ type }) => {
+  const [product, setProduct] = useState([]);
   const { control, handleSubmit, setValue, watch, getValues } = useForm({
     mode: onchange,
   });
@@ -21,6 +28,8 @@ const ProductForm = ({ type }) => {
   const watchPath = watch("path");
   const [images, setImages] = useState([]);
   const [handleAddDoc] = useAddDoc();
+  const [handleUpdateDoc] = useUpdateDoc();
+  const { id } = type === "update" && useParams();
 
   const handleUploadImage = (file) => {
     if (file) {
@@ -39,7 +48,15 @@ const ProductForm = ({ type }) => {
     handleAddDoc("products", values);
   };
   const handleUpdate = (values) => {
-    console.log(values);
+    values.images = images;
+
+    const dataUpdate = {
+      path: "products",
+      id: product.id,
+      data: values,
+    };
+
+    handleUpdateDoc(dataUpdate);
   };
 
   const handleInputChange = (e) => {
@@ -63,6 +80,23 @@ const ProductForm = ({ type }) => {
       });
     });
   }, []);
+  useEffect(() => {
+    if (type === "update" && id) {
+      const productRef = doc(collection(db, "products"), id);
+
+      onSnapshot(productRef, (res) =>
+        setProduct({ id: res.id, ...res.data() })
+      );
+    }
+  }, [id]);
+  useEffect(() => {
+    if (type === "update" && product) {
+      for (const key in product) {
+        setValue(key, product[key]);
+      }
+      setImages(product.images);
+    }
+  }, [product]);
 
   const handleSelectChange = (e) => {
     setValue("cateId", e.target.value);
@@ -77,13 +111,19 @@ const ProductForm = ({ type }) => {
           type === "add" ? handleSubmit(handleAdd) : handleSubmit(handleUpdate)
         }
       >
+        {type === "update" ? (
+          <div className="text-lg font-medium flex items-center gap-4 mb-6">
+            {product && (
+              <>
+                <span>{product.cateName}</span>-<span>{product.name}</span>
+              </>
+            )}
+          </div>
+        ) : (
+          ""
+        )}
         <div className="grid grid-cols-2 gap-4 items-end">
-          <Select
-            control={control}
-            name="cateId"
-            defaultValue={type === "add" && 0}
-            onChange={handleSelectChange}
-          >
+          <Select control={control} name="cateId" onChange={handleSelectChange}>
             <option value="0">Chọn danh mục</option>
             {state.categories?.length > 0 &&
               state.categories.map((category) => (
@@ -95,8 +135,9 @@ const ProductForm = ({ type }) => {
           <Input
             name="path"
             control={control}
-            display="Nơi lưu ảnh"
+            display={type === "add" && "Nơi lưu ảnh"}
             placeholder="Nhập path"
+            disabled={type === "update" ? true : false}
           />
         </div>
 
@@ -127,6 +168,8 @@ const ProductForm = ({ type }) => {
             control={control}
             display="Giảm giá"
             placeholder="Nhập phần trăm giảm giá"
+            min={0}
+            max={100}
           />
         </div>
         <div className="mb-6">
@@ -156,10 +199,6 @@ const ProductForm = ({ type }) => {
       </div>
     </div>
   );
-};
-
-ProductForm.propTypes = {
-  type: PropTypes.oneOf(["add", "update"]).isRequired,
 };
 
 export default ProductForm;
