@@ -9,6 +9,7 @@ const Nav = () => {
           <NavLink to="/">Trang chủ</NavLink>
           <NavLink to="/products">Quản lý sản phẩm</NavLink>
           <NavLink to="/categories">Quản lý danh mục</NavLink>
+          <NavLink to="/users">Quản lý người dùng</NavLink>
         </div>
       </div>
     </div>

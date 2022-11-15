@@ -1,8 +1,23 @@
-import React from "react";
+import { collection, getCountFromServer } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { db } from "../../../configs/firebase-configs";
 
 const Block = ({ slug, display, color }) => {
   const navigate = useNavigate();
+  const colRef = collection(db, slug);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    async function countFunc() {
+      const snapshot = await getCountFromServer(colRef);
+
+      setCount(snapshot.data().count);
+    }
+
+    countFunc();
+  }, []);
+
   return (
     <div
       onClick={() => navigate(`/${slug}`)}
@@ -12,7 +27,9 @@ const Block = ({ slug, display, color }) => {
       <span className="block font-bold text-current mb-1 line-clamp-1">
         Tổng số {display}
       </span>
-      <span className="text-slate-700 font-bold text-4xl">40</span>
+      <span className="text-slate-700 font-bold text-4xl">
+        {count ? count : 0}
+      </span>
     </div>
   );
 };
