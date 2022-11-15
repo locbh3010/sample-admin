@@ -1,7 +1,25 @@
-import React from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import ProductForm from "../../components/ui/form/ProductForm";
+import { ProductItem, ProductList } from "../../components/ui/product/Product";
+import { db } from "../../configs/firebase-configs";
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+  const colRef = collection(db, "products");
+
+  useEffect(() => {
+    onSnapshot(colRef, (res) => {
+      const docs = res.docs;
+      let temp = [];
+
+      docs?.length > 0 &&
+        docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+
+      setProducts(temp);
+    });
+  }, []);
+
   return (
     <div>
       <div className="container">
@@ -11,6 +29,14 @@ const Products = () => {
           </h1>
           <ProductForm type="add" />
         </div>
+      </div>
+      <div className="container">
+        <ProductList>
+          {products?.length > 0 &&
+            products.map((product) => (
+              <ProductItem data={product} key={product.id} />
+            ))}
+        </ProductList>
       </div>
     </div>
   );

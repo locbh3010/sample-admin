@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PropTypes from "prop-types";
 import Select from "../input/Select";
-import { db } from "../../../configs/firebase-configs";
+import { db, storage } from "../../../configs/firebase-configs";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import Input from "../input/Input";
 import Editor from "../input/Editor";
 import InputFile from "../input/InputFile";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useAddDoc } from "../../../hooks/firestore-hook";
 
 const ProductForm = ({ type }) => {
-  const { control, handleSubmit, setValue, watch } = useForm({
+  const { control, handleSubmit, setValue, watch, getValues } = useForm({
     mode: onchange,
   });
   const [state, setState] = useState({
@@ -17,11 +19,36 @@ const ProductForm = ({ type }) => {
   });
   const categoryRef = collection(db, "categories");
   const watchPath = watch("path");
+  const [images, setImages] = useState([]);
+  const [handleAddDoc] = useAddDoc();
+
+  const handleUploadImage = (file) => {
+    if (file) {
+      const path = getValues("path");
+      const storageRef = ref(storage, `images/${path}/${file.name}`);
+      uploadBytes(storageRef, file).then(async (snapshot) => {
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        setImages((img) => [...img, downloadURL]);
+      });
+    }
+  };
 
   const handleAdd = (values) => {
+    values.images = images;
+
+    handleAddDoc("products", values);
+  };
+  const handleUpdate = (values) => {
     console.log(values);
   };
-  const handleUpdate = (values) => {};
+
+  const handleInputChange = (e) => {
+    const files = e.target.files;
+    setImages([]);
+    if (files) {
+      [...files].map((file) => handleUploadImage(file));
+    }
+  };
 
   useEffect(() => {
     getDocs(categoryRef).then((res) => {
@@ -103,10 +130,12 @@ const ProductForm = ({ type }) => {
           />
         </div>
         <div className="mb-6">
-          <Editor setValue={setValue} field="description"></Editor>
+          <Editor control={control} name="description"></Editor>
         </div>
         <div className="mb-10">
-          {watchPath && <InputFile name="images" multiple />}
+          {watchPath && (
+            <InputFile name="images" multiple onChange={handleInputChange} />
+          )}
         </div>
         <div className="w-full flex-center">
           <button
@@ -117,6 +146,14 @@ const ProductForm = ({ type }) => {
           </button>
         </div>
       </form>
+      <div className="grid grid-cols-3 gap-4 grid-flow-row autor-rows-fr mt-8">
+        {images?.length > 0 &&
+          images.map((img) => (
+            <div className="w-full aspect-video overflow-hidden" key={img}>
+              <img src={img} alt="" className="w-full h-full object-cover" />
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

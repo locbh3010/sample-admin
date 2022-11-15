@@ -10,8 +10,10 @@ import HomeHeader from "./header/HomeHeader";
 
 const Home = () => {
   const cateRef = collection(db, "categories");
+  const productRef = collection(db, "products");
   const [state, setState] = useState({
     categories: [],
+    products: [],
   });
 
   useEffect(() => {
@@ -26,6 +28,17 @@ const Home = () => {
           categories: temp,
         });
       }
+    });
+    onSnapshot(productRef, (res) => {
+      const docs = res.docs;
+      let temp = [];
+
+      docs?.length > 0 &&
+        docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+      setState({
+        ...state,
+        products: temp,
+      });
     });
   }, []);
 
@@ -53,7 +66,10 @@ const Home = () => {
           Sản phẩm nổi bật
         </h4>
         <ProductList>
-          <ProductItem></ProductItem>
+          {state.products?.length > 0 &&
+            state.products.map((product) => (
+              <ProductItem key={product.id} data={product} />
+            ))}
         </ProductList>
       </div>
     </div>
