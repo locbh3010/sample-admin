@@ -22,10 +22,21 @@
   input:disabled {
     @apply bg-gray-300 text-gray-500 select-none border-gray-400 opacity-70;
   }
+  .btn {
+    @apply duration-300 bg-blue-500 hover:bg-blue-400 text-white;
+  }
 }
 
 @layer utilities {
   .flex-center {
     @apply flex items-center justify-center;
+  }
+
+  .form-open {
+    @apply opacity-100 visible;
+  }
+
+  .form-close {
+    @apply opacity-0 invisible;
   }
 }

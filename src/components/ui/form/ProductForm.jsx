@@ -14,9 +14,11 @@ import Editor from "../input/Editor";
 import InputFile from "../input/InputFile";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const ProductForm = ({ type }) => {
+  const navigate = useNavigate();
   const [product, setProduct] = useState([]);
   const { control, handleSubmit, setValue, watch, getValues } = useForm({
     mode: onchange,
@@ -30,6 +32,7 @@ const ProductForm = ({ type }) => {
   const [handleAddDoc] = useAddDoc();
   const [handleUpdateDoc] = useUpdateDoc();
   const { id } = type === "update" && useParams();
+  const { user } = useAuth();
 
   const handleUploadImage = (file) => {
     if (file) {
@@ -68,6 +71,7 @@ const ProductForm = ({ type }) => {
   };
 
   useEffect(() => {
+    if (!user) navigate("/sign-in");
     getDocs(categoryRef).then((res) => {
       const docs = res.docs;
       let temp = [];

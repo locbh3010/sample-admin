@@ -8,6 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CategoryForm = ({ type }) => {
   const { control, handleSubmit, getValues, setValue, watch } = useForm({
@@ -28,11 +29,22 @@ const CategoryForm = ({ type }) => {
     if (file) {
       const path = getValues("path");
       const storageRef = ref(storage, `images/${path}/${file.name}`);
-      uploadBytes(storageRef, file).then(async (snapshot) => {
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        setValue("image", downloadURL);
-        setImage(downloadURL);
-      });
+      uploadBytes(storageRef, file)
+        .then(async (snapshot) => {
+          const downloadURL = await getDownloadURL(snapshot.ref);
+          setValue("image", downloadURL);
+          setImage(downloadURL);
+        })
+        .catch((err) => {
+          switch (err.status) {
+            case "403":
+              toast.error("Bạn chưa đăng nhập");
+              break;
+
+            default:
+              break;
+          }
+        });
     }
   };
   const handleAddCategory = (values) => {

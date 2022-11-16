@@ -1,19 +1,24 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   CategoryItem,
   CategoryList,
 } from "../../components/ui/category/Category";
 import CategoryForm from "../../components/ui/form/CategoryForm";
 import { db } from "../../configs/firebase-configs";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Categories = () => {
   const colRef = collection(db, "categories");
   const [state, setState] = useState({
     categories: [],
   });
+  const naviate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
+    !user && naviate("/sign-in");
     onSnapshot(colRef, (response) => {
       const docs = response.docs;
       let temp = [];

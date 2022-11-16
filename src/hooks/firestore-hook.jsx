@@ -36,18 +36,22 @@ export function useDeleteDoc() {
     const docRef = doc(collection(db, path), id);
     const listImage = ref(storage, `images/${filePath}`);
 
-    deleteDoc(docRef).then(async () => {
-      await listAll(listImage).then(async (res) => {
-        const items = res.items;
+    deleteDoc(docRef)
+      .then(async () => {
+        await listAll(listImage).then(async (res) => {
+          const items = res.items;
 
-        (await items?.length) > 0 &&
-          items.map((item) => {
-            const imageRef = ref(storage, item.fullPath);
-            deleteObject(imageRef);
-          });
+          (await items?.length) > 0 &&
+            items.map((item) => {
+              const imageRef = ref(storage, item.fullPath);
+              deleteObject(imageRef);
+            });
+          toast.success("Xóa thành công");
+        });
+      })
+      .catch((err) => {
+        if (err) toast.error("Bạn không phải admin");
       });
-      toast.success("Xóa thành công");
-    });
   };
 
   return [handleRemove];
