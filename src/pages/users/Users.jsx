@@ -3,17 +3,14 @@ import UserForm from "../../components/ui/form/UserForm";
 import { Table, Th, UserItem } from "../../components/ui/table/Table";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../configs/firebase-configs";
-import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Users = () => {
   const userRef = collection(db, "users");
   const [users, setUsers] = useState([]);
-  const { user } = useAuth();
-  const naviate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    !user && naviate("/sign-in");
     onSnapshot(userRef, (res) => {
       const docs = res.docs;
       let temp = [];
@@ -40,7 +37,12 @@ const Users = () => {
 
         <div className="mt-16">
           <div className="bg-white p-1 mb-4 inline-flex rounded-full gap-1">
-            <button className="duration-300 rounded-full px-6 py-2 font-semibold hover:bg-gray-100 text-slate-800">
+            <button
+              className="duration-300 rounded-full px-6 py-2 font-semibold hover:bg-gray-100 text-slate-800"
+              onClick={() => {
+                navigate({ pathname: "/users", search: "?add=true" });
+              }}
+            >
               Thêm người dùng
             </button>
             <button className="duration-300 rounded-full px-6 py-2 font-semibold hover:bg-gray-100 text-slate-800">

@@ -1,6 +1,7 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Layout from "./components/layout/Layout";
+import Blogs from "./pages/blogs/Blogs";
 import Categories from "./pages/categories/Categories";
 import CategoryDetail from "./pages/category/CategoryDetail";
 import Home from "./pages/home/Home";
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/products" element={<Products />}></Route>
           <Route path="/product/:id" element={<ProductDetail />}></Route>
           <Route path="/users" element={<Users />}></Route>
+          <Route path="/blogs" element={<Blogs />}></Route>
         </Route>
         <Route path="/sign-in" element={<SignIn />}></Route>
       </Routes>

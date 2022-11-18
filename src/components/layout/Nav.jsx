@@ -37,6 +37,7 @@ const Nav = () => {
             <NavLink to="/products">Quản lý sản phẩm</NavLink>
             <NavLink to="/categories">Quản lý danh mục</NavLink>
             <NavLink to="/users">Quản lý người dùng</NavLink>
+            <NavLink to="/blogs">Quản lý blog</NavLink>
           </div>
 
           {currentUser ? (
