@@ -26,7 +26,7 @@ export default function Input({
         type={type}
         name={name}
         id={name}
-        className="w-full outline-none bg-transparent px-3 py-4 border-2 border-gray-400/30 rounded duration-300 focus:bg-transparent shadow-sm focus:shadow-lg focus:border-blue-500/40"
+        className="w-full outline-none bg-transparent px-3 py-4 border-2 border-gray-400/30 rounded duration-300 focus:bg-transparent shadow-sm focus:shadow "
         {...field}
         {...props}
       />
