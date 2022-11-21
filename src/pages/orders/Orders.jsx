@@ -1,9 +1,20 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  Timestamp,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { db } from "../../configs/firebase-configs";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [active, setActive] = useState([]);
+  const [pending, setPending] = useState([]);
+  const [shipping, setShipping] = useState([]);
+  const [orderToday, setOrderToday] = useState([]);
   const orderRef = collection(db, "orders");
   const Item = (order) => {
     const data = order.order;
@@ -24,29 +35,81 @@ const Orders = () => {
   };
 
   useEffect(() => {
+    const now = new Date();
+    now.setHours(5, 0, 0, 0);
+    const timestamp = Timestamp.fromDate(now);
+    const orderToDay = query(
+      collection(db, "orders"),
+      where("date", ">", timestamp)
+    );
     onSnapshot(orderRef, (res) => {
       let temp = [];
+      setActive([]);
+      setPending([]);
+      setShipping([]);
       const docs = res.docs;
       docs?.length > 0 &&
-        docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+        docs.map((doc) => {
+          temp.push({ id: doc.id, ...doc.data() });
+
+          switch (doc.data().status) {
+            case "pending":
+              setPending((oldValue) => [
+                ...oldValue,
+                { id: doc.id, ...doc.data() },
+              ]);
+              break;
+            case "active":
+              setActive((oldValue) => [
+                ...oldValue,
+                { id: doc.id, ...doc.data() },
+              ]);
+              break;
+            case "shipping":
+              setShipping((oldValue) => [
+                ...oldValue,
+                { id: doc.id, ...doc.data() },
+              ]);
+              break;
+            case "resolve":
+              break;
+            case "reject":
+              break;
+
+            default:
+              break;
+          }
+        });
       setOrders(temp);
     });
+    onSnapshot(orderToDay, (res) => {
+      setOrderToday([]);
+      const docs = res.docs;
+      docs?.length > 0 &&
+        docs.map((doc) =>
+          setOrderToday((oldValue) => [
+            ...oldValue,
+            { id: doc.id, ...doc.data() },
+          ])
+        );
+    });
   }, []);
+
   return (
     <div className="py-16">
       <div className="container">
         <div className="grid grid-cols-4 gap-6 text-white capitalize font-bold text-2xl mb-10">
           <div className="rounded-lg bg-blue-500 shadow aspect-video py-6 px-9">
-            Chờ xác nhận: 10
+            Chờ xác nhận: {pending.length}
           </div>
           <div className="rounded-lg bg-pink-500 shadow aspect-video py-6 px-9">
-            Đã xác nhận: 20
+            Đã xác nhận: {active.length}
           </div>
           <div className="rounded-lg bg-red-500 shadow aspect-video py-6 px-9">
-            Đang giao: 15
+            Đang giao: {shipping.length}
           </div>
           <div className="rounded-lg bg-green-500 shadow aspect-video py-6 px-9">
-            Đơn hôm nay: 30
+            Đơn hôm nay: {orderToday.length}
           </div>
         </div>
 
