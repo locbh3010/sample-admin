@@ -24,7 +24,7 @@ export function ProductItem({ data }) {
     navigate(`/product/${data.id}`);
   };
   const handleDelete = () => {
-    handleDelete("products", data.id, data.path);
+    handleDeleteDoc("products", data.id, data.path);
   };
 
   return (

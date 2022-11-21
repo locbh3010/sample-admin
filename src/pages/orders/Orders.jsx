@@ -7,6 +7,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { db } from "../../configs/firebase-configs";
 
 const Orders = () => {
@@ -29,7 +30,9 @@ const Orders = () => {
         <td className="py-4 px-6">{data.status}</td>
         <td className="py-4 px-6">{data?.date.toDate().toDateString()}</td>
         <td className="py-4 px-6">${data.total}</td>
-        <td className="py-4 px-6">View detail</td>
+        <td className="py-4 px-6">
+          <Link to={`/order/${data.id}`}>View detail</Link>
+        </td>
       </tr>
     );
   };
