@@ -5,7 +5,6 @@ const Select = ({ name, control, children, ...props }) => {
   const {} = useController({
     name,
     control,
-    defaultValue: "test",
   });
   return (
     <select

@@ -29,7 +29,7 @@ export function ProductItem({ data }) {
 
   return (
     <div className="w-full rounded-lg bg-white shadow flex flex-col relative duration-300 hover:shadow-xl">
-      <div className="absolute top-2 left-2 bg-white/25 rounded text-white z-50 font-bold w-10 h-10 flex-center text-lg">
+      <div className="absolute top-2 left-2 bg-gray-500/50 rounded text-white z-30 font-bold w-10 h-10 flex-center text-lg">
         {data.count}
       </div>
       {/* hình ảnh */}
