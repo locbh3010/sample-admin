@@ -3,7 +3,7 @@ import UserForm from "../../components/ui/form/UserForm";
 import { Table, Th, UserItem } from "../../components/ui/table/Table";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../configs/firebase-configs";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
   const userRef = collection(db, "users");

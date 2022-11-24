@@ -56,7 +56,7 @@ const HomeHeader = () => {
               color="text-red-500"
             ></Block>
             <Block
-              slug="bills"
+              slug="orders"
               display="đơn hàng"
               color="text-stone-500"
             ></Block>
