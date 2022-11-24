@@ -28,7 +28,7 @@ const OrderDetail = () => {
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 rounded-full overflow-hidden w-16 h-16">
                 <img
-                  src="https://static.wikia.nocookie.net/maid-dragon/images/5/57/Kanna_Anime.png/revision/latest?cb=20180225164809"
+                  src={user.avatar}
                   alt=""
                   className="w-full h-full object-cover"
                 />

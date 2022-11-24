@@ -39,14 +39,23 @@ export function UserItem({ data, index }) {
     });
   };
   const handleNavigate = () => {
-    navigate({
-      pathname: "/users",
-      search: `?update=${data.id}`,
-    });
+    // navigate({
+    //   pathname: "/users",
+    //   search: `?update=${data.id}`,
+    // });
+    navigate(`/user/${data.id}`);
   };
   return (
     <tr className="border-b">
-      <Td>{index}</Td>
+      <Td>
+        <div className="rounded-full bg-gray-400 overflow-hidden w-12 h-12 flex-shrink-0">
+          <img
+            src={data?.avatar}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </Td>
       <Td>{data.id}</Td>
       <Td>{data.email}</Td>
       <Td>{data.username}</Td>

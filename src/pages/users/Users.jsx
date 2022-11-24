@@ -45,9 +45,6 @@ const Users = () => {
             >
               Thêm người dùng
             </button>
-            <button className="duration-300 rounded-full px-6 py-2 font-semibold hover:bg-gray-100 text-slate-800">
-              Xóa người dùng đã chọn
-            </button>
           </div>
           <Table>
             <thead className="border-b bg-white">

@@ -19,14 +19,14 @@ export default function Input({
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="font-semibold text-xl capitalize">
+      <label htmlFor={name} className="cursor-pointer inline-block">
         {display}
       </label>
       <input
         type={type}
         name={name}
         id={name}
-        className="w-full outline-none bg-transparent px-3 py-4 border-2 border-gray-400/30 rounded duration-300 focus:bg-transparent shadow-sm focus:shadow "
+        className="w-full outline-none border-slate-400 px-3 py-4 border-b-2 bg-transparent"
         {...field}
         {...props}
       />

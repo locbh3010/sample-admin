@@ -1,0 +1,124 @@
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import Input from "../../components/ui/input/Input";
+import { db, storage } from "../../configs/firebase-configs";
+import { useUpdateDoc } from "../../hooks/firestore-hook";
+
+const User = () => {
+  const { control, setValue, handleSubmit } = useForm({
+    mode: onchange,
+  });
+  const { id } = useParams();
+  const [user, setUser] = useState({});
+  const [avatar, setAvatar] = useState(null);
+  const [handleUpdate] = useUpdateDoc();
+
+  useEffect(() => {
+    if (id) {
+      const userRef = doc(collection(db, "users"), id);
+      onSnapshot(userRef, (res) => {
+        setUser({ id: res.id, ...res.data() });
+        const data = res.data();
+
+        for (const key in data) {
+          setValue(key, data[key]);
+        }
+        setAvatar(data.avatar);
+      });
+    }
+  }, [id]);
+
+  const handleUpdateUser = (value) => {
+    handleUpdate({ path: "users", id: user.id, data: value });
+  };
+
+  const handleUploadImage = (file) => {
+    if (file) {
+      const path = user.id;
+      const storageRef = ref(storage, `images/${path}/${file.name}`);
+      uploadBytes(storageRef, file)
+        .then(async (snapshot) => {
+          const downloadURL = await getDownloadURL(snapshot.ref);
+          setValue("avatar", downloadURL);
+          setAvatar(downloadURL);
+        })
+        .catch((err) => {
+          switch (err.status) {
+            case "403":
+              toast.error("Bạn chưa đăng nhập");
+              break;
+
+            default:
+              break;
+          }
+        });
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const file = e.target.files[0];
+    handleUploadImage(file);
+  };
+
+  return (
+    <div className="py-24">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center gap-4">
+          <label className="w-24 h-24 rounded-full bg-gray-400 flex items-center justify-center overflow-hidden">
+            {avatar ? (
+              <img src={avatar} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-8 h-8 text-gray-300"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+                />
+              </svg>
+            )}
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleInputChange}
+            />
+          </label>
+          <span>{user?.id}</span>
+        </div>
+
+        <div className="py-16">
+          <form onSubmit={handleSubmit(handleUpdateUser)}>
+            <div className="grid grid-cols-2 gap-4 grid-flow-row auto-rows-fr mb-12">
+              <Input name="fullname" control={control} display="Họ và tên" />
+              <Input name="username" control={control} display="User name" />
+              <Input name="email" control={control} display="Email" />
+              <Input name="phone" control={control} display="Số điện thoại" />
+            </div>
+            <button
+              type="submit"
+              className="text-white bg-black py-4 w-full font-medium uppercase border-2 border-black duration-300 hover:text-black hover:bg-transparent"
+            >
+              Lưu thay đổi
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default User;
