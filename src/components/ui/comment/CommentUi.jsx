@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useRef } from "react";
 import Pencil from "../../icon/Pencil";
 import Trash from "../../icon/Trash";
 
 const CommentUi = () => {
+  const detailRef = useRef(null);
+
+  const handleToggleDetail = (e) => {
+    detailRef.current.classList.toggle("hidden");
+  };
+  const handleCloseRef = () => {
+    detailRef.current.classList.add("hidden");
+  };
   return (
     <div className="w-full">
       <div className="bg-white px-4 py-6 rounded shadow">
         <div className="mb-10 flex items-center gap-2">
-          <button className="bg-green-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md">
+          <button
+            className="bg-green-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md"
+            onClick={handleToggleDetail}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -65,10 +76,12 @@ const CommentUi = () => {
           </p>
         </div>
       </div>
-      <div className="my-4 bg-white rounded shadow py-8 px-4">
+      <div
+        className="my-4 bg-white rounded shadow py-8 px-4 hidden"
+        ref={detailRef}
+      >
         <div className="mb-3 flex">
-          <div></div>
-          <button className="ml-auto">
+          <button className="ml-auto" onClick={handleCloseRef}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -84,6 +97,44 @@ const CommentUi = () => {
               />
             </svg>
           </button>
+        </div>
+        <div className="bg-gray-400 rounded-full overflow-hidden w-24 h-24"></div>
+        <div className="grid grid-cols-2 gap-4 grid-flow-row auto-rows-fr py-4">
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold capitalize">Email</span>
+            <span>huuloc@gmail.com</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold capitalize">Số điện thoại</span>
+            <span>0356454288</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold capitalize">Họ tên</span>
+            <span>Bùi Hữu Lộc</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold capitalize">UID</span>
+            <span>LKjif891j7a</span>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="aspect-video overflow-hidden rounded-lg shadow">
+            <img
+              src="https://media.vneconomy.vn/640x360/images/upload/2022/06/08/nft-free-jpg-optimal.jpg"
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <div className="py-4 flex flex-col overflow-hidden text-ellipsis">
+            <span className="font-bold text-xl mb-4">
+              Lorem ipsum, dolor sit amet consectetur adipisicing.
+            </span>
+            <span className="text-gray-800">$400</span>
+            <div className="text-gray-500">
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+              Reiciendis, explicabo.
+            </div>
+          </div>
         </div>
       </div>
     </div>
