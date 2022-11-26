@@ -47,11 +47,13 @@ const ProductForm = ({ type }) => {
 
   const handleAdd = (values) => {
     values.images = images;
+    values.price = +values.price;
 
     handleAddDoc("products", values);
   };
   const handleUpdate = (values) => {
     values.images = images;
+    values.price = +values.price;
 
     const dataUpdate = {
       path: "products",
