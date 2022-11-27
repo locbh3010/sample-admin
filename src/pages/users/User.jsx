@@ -1,8 +1,9 @@
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
+import CommentUi from "../../components/ui/comment/CommentUi";
 import Input from "../../components/ui/input/Input";
 import { db, storage } from "../../configs/firebase-configs";
 import { useUpdateDoc } from "../../hooks/firestore-hook";
@@ -15,10 +16,15 @@ const User = () => {
   const [user, setUser] = useState({});
   const [avatar, setAvatar] = useState(null);
   const [handleUpdate] = useUpdateDoc();
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     if (id) {
       const userRef = doc(collection(db, "users"), id);
+      const commentsRef = query(
+        collection(db, "comments"),
+        where("userRef", "==", userRef)
+      );
       onSnapshot(userRef, (res) => {
         setUser({ id: res.id, ...res.data() });
         const data = res.data();
@@ -28,13 +34,20 @@ const User = () => {
         }
         setAvatar(data.avatar);
       });
+      onSnapshot(commentsRef, (res) => {
+        let temp = [];
+        res.docs.length > 0 &&
+          res.docs.map((doc) =>
+            temp.push({ id: doc.id, data: { ...doc.data() } })
+          );
+        setComments(temp);
+      });
     }
   }, [id]);
 
   const handleUpdateUser = (value) => {
     handleUpdate({ path: "users", id: user.id, data: value });
   };
-
   const handleUploadImage = (file) => {
     if (file) {
       const path = user.id;
@@ -57,7 +70,6 @@ const User = () => {
         });
     }
   };
-
   const handleInputChange = (e) => {
     const file = e.target.files[0];
     handleUploadImage(file);
@@ -115,6 +127,13 @@ const User = () => {
               Lưu thay đổi
             </button>
           </form>
+        </div>
+
+        <div className="flex flex-col gap-10">
+          {comments.length > 0 &&
+            comments.map((comment) => (
+              <CommentUi key={comment.id} comment={comment} user={user} />
+            ))}
         </div>
       </div>
     </div>

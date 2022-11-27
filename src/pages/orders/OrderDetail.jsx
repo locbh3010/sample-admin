@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { db } from "../../configs/firebase-configs";
 
 const OrderDetail = () => {
@@ -24,7 +24,10 @@ const OrderDetail = () => {
     <div className="max-w-3xl mx-auto py-12 px-8 bg-white mt-20 shadow">
       {order && (
         <>
-          <div className="flex items-center justify-between mb-4 text-lg font-medium">
+          <NavLink
+            to={`/user/${user.id}`}
+            className="flex items-center justify-between mb-4 text-lg font-medium"
+          >
             <div className="flex items-center gap-4">
               <div className="flex-shrink-0 rounded-full overflow-hidden w-16 h-16">
                 <img
@@ -37,7 +40,7 @@ const OrderDetail = () => {
             </div>
 
             <span>UID: {user.id}</span>
-          </div>
+          </NavLink>
           <div className="flex items-center justify-between text-lg pb-6">
             <span className="font-medium">Order Id: {order.id}</span>
             <span className="capitalize">{order.status}</span>
