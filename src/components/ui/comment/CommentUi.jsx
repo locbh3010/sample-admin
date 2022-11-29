@@ -1,6 +1,13 @@
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import JoditEditor from "jodit-react";
 import React, { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../../../configs/firebase-configs";
 import Pencil from "../../icon/Pencil";
@@ -16,7 +23,7 @@ const CommentUi = ({ comment, user }) => {
   const [commentUpdate, setCommentUpdate] = useState("");
   const [product, setProduct] = useState({});
 
-  const handleToggleDetail = (e) => {
+  const handleToggleDetail = () => {
     detailRef.current.classList.toggle("hidden");
   };
   const handleCloseRef = () => {
@@ -36,6 +43,12 @@ const CommentUi = ({ comment, user }) => {
       setCommentUpdate(data.comment);
       setUpdate(true);
     }
+  };
+  const handleDeleteComment = () => {
+    const docRef = doc(collection(db, "comments"), id);
+    deleteDoc(docRef).then(() => {
+      toast.success("Xóa bình luận thành công");
+    });
   };
   useEffect(() => {
     onSnapshot(productRef, (res) => {
@@ -88,25 +101,34 @@ const CommentUi = ({ comment, user }) => {
           >
             <Pencil />
           </button>
-          <button className="bg-red-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md">
+          <button
+            className="bg-red-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md"
+            onClick={handleDeleteComment}
+          >
             <Trash />
           </button>
         </div>
 
         <div className="flex gap-4 flex-col">
           <div className="flex items-start gap-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-400 flex-shrink-0">
+            <NavLink
+              to={`/user/${user.id}`}
+              className="w-20 h-20 rounded-full overflow-hidden bg-gray-400 flex-shrink-0"
+            >
               <img
                 src={user.avatar}
                 alt=""
                 className="w-full h-full object-cover"
               />
-            </div>
+            </NavLink>
 
             <div className="flex flex-col">
-              <span className="font-bold text-lg capitalize">
+              <NavLink
+                to={`/user/${user.id}`}
+                className="font-bold text-lg capitalize"
+              >
                 {user.fullname}
-              </span>
+              </NavLink>
               <span className="text-gray-400 font-medium">
                 {data.createAt.toDate().toDateString()}
               </span>

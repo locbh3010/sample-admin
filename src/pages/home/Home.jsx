@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, limit, onSnapshot, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   CategoryItem,
@@ -32,6 +32,7 @@ const Home = () => {
 
       docs?.length > 0 &&
         docs.map((doc) => temp.push({ id: doc.id, ...doc.data() }));
+
       setProducts(temp);
     });
   }, []);
