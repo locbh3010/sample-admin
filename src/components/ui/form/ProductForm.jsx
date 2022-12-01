@@ -73,7 +73,6 @@ const ProductForm = ({ type }) => {
   };
 
   useEffect(() => {
-    if (!user) navigate("/sign-in");
     getDocs(categoryRef).then((res) => {
       const docs = res.docs;
       let temp = [];

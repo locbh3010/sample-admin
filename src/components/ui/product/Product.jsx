@@ -34,7 +34,7 @@ export function ProductItem({ data }) {
       </div>
       {/* hình ảnh */}
       <div
-        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video"
+        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video bg-gray-200"
         onClick={handleNavigate}
       >
         <img

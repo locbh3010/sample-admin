@@ -132,7 +132,7 @@ const User = () => {
         <div className="flex flex-col gap-10">
           {comments.length > 0 &&
             comments.map((comment) => (
-              <CommentUi key={comment.id} comment={comment} user={user} />
+              <CommentUi key={comment.id} comment={comment} />
             ))}
         </div>
       </div>

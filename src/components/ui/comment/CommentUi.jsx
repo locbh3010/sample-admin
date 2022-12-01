@@ -13,12 +13,13 @@ import { db } from "../../../configs/firebase-configs";
 import Pencil from "../../icon/Pencil";
 import Trash from "../../icon/Trash";
 
-const CommentUi = ({ comment, user }) => {
+const CommentUi = ({ comment }) => {
+  const [user, setUser] = useState({});
   const detailRef = useRef(null);
   const commentRef = useRef(null);
   const descriptionProduct = useRef(null);
   const { data, id } = comment;
-  const { productRef } = data;
+  const { productRef, userRef } = data;
   const [update, setUpdate] = useState(false);
   const [commentUpdate, setCommentUpdate] = useState("");
   const [product, setProduct] = useState({});
@@ -50,12 +51,16 @@ const CommentUi = ({ comment, user }) => {
       toast.success("Xóa bình luận thành công");
     });
   };
+
   useEffect(() => {
     onSnapshot(productRef, (res) => {
       setProduct({ id: res.id, ...res.data() });
     });
-  }, [comment]);
 
+    onSnapshot(userRef, (res) => {
+      setUser({ id: res.id, ...res.data() });
+    });
+  }, [comment]);
   useEffect(() => {
     descriptionProduct.current.textContent = "";
     descriptionProduct?.current?.insertAdjacentHTML(
@@ -112,11 +117,11 @@ const CommentUi = ({ comment, user }) => {
         <div className="flex gap-4 flex-col">
           <div className="flex items-start gap-4">
             <NavLink
-              to={`/user/${user.id}`}
+              to={`/user/${user?.id}`}
               className="w-20 h-20 rounded-full overflow-hidden bg-gray-400 flex-shrink-0"
             >
               <img
-                src={user.avatar}
+                src={user?.avatar}
                 alt=""
                 className="w-full h-full object-cover"
               />
@@ -124,10 +129,10 @@ const CommentUi = ({ comment, user }) => {
 
             <div className="flex flex-col">
               <NavLink
-                to={`/user/${user.id}`}
+                to={`/user/${user?.id}`}
                 className="font-bold text-lg capitalize"
               >
-                {user.fullname}
+                {user?.fullname}
               </NavLink>
               <span className="text-gray-400 font-medium">
                 {data.createAt.toDate().toDateString()}
