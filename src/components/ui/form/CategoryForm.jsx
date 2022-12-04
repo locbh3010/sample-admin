@@ -9,10 +9,31 @@ import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useShowError } from "../../../hooks/useValid";
+
+const pathRegExp = /^[A-Za-z0-9_.]+$/;
+
+const schema = yup.object().shape({
+  name: yup.string().required("Vui lòng nhập tên danh mục"),
+  path: yup
+    .string()
+    .matches(pathRegExp, "Sai định dạng đường dẫn")
+    .required("Vui lòng nhập đương dẫn"),
+});
 
 const CategoryForm = ({ type }) => {
-  const { control, handleSubmit, getValues, setValue, watch } = useForm({
-    mode: onchange,
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
   });
 
   const { id } = type === "update" && useParams();
@@ -22,6 +43,7 @@ const CategoryForm = ({ type }) => {
   const watchPath = watch("path");
 
   // custom hook
+  const [handleShowErr] = useShowError(errors);
   const [handleAddDoc] = useAddDoc();
   const [handleUpdate] = useUpdateDoc();
 
@@ -74,12 +96,14 @@ const CategoryForm = ({ type }) => {
       });
     }
   }, []);
-
   useEffect(() => {
     for (const key in category) {
       setValue(key, category[key]);
     }
   }, [category]);
+  useEffect(() => {
+    handleShowErr();
+  }, [errors]);
 
   return (
     <form
@@ -104,7 +128,7 @@ const CategoryForm = ({ type }) => {
             control={control}
             disabled={type === "update" ? true : false}
           />
-          {watchPath && (
+          {watchPath && !errors.path && (
             <InputFile
               display="Hình ảnh"
               name="image"

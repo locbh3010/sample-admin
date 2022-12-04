@@ -14,13 +14,12 @@ import Editor from "../input/Editor";
 import InputFile from "../input/InputFile";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 
 const pathRegExp = /^[A-Za-z0-9_.]+$/;
-const nameRegExp = /^[A-Za-z0-9 ]+$/;
 
 const schema = yup.object().shape({
   cateId: yup
@@ -31,10 +30,7 @@ const schema = yup.object().shape({
     .string()
     .matches(pathRegExp, "Path không đúng chuẩn")
     .required("Hãy nhập path"),
-  name: yup
-    .string()
-    .matches(nameRegExp, "Tên sản phẩm không được chứa ký tự đặc biệt")
-    .required("Vui lòng nhập tên sản phẩm"),
+  name: yup.string().required("Vui lòng nhập tên sản phẩm"),
   price: yup
     .number()
     .min(1, "Giá sản phẩm phải lớn hơn 1")
@@ -87,7 +83,6 @@ const ProductForm = ({ type }) => {
   const handleAdd = (values) => {
     values.images = images;
     values.price = +values.price;
-    console.log(values);
 
     handleAddDoc("products", values);
   };
@@ -100,7 +95,6 @@ const ProductForm = ({ type }) => {
       id: product.id,
       data: values,
     };
-
     handleUpdateDoc(dataUpdate);
   };
 
