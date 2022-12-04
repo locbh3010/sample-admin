@@ -33,7 +33,9 @@ const schema = yup.object().shape({
   phone: yup
     .string()
     .required("Vui lòng nhập số điện thoại")
-    .matches(phoneRegExp, "Số điện thoại không đúng"),
+    .matches(phoneRegExp, "Số điện thoại không đúng")
+    .min(10, "Số điện thoại tối thiểu 10 số")
+    .max(11, "Số điện thoại tối đa 11 số"),
 });
 const User = () => {
   const {
@@ -90,7 +92,10 @@ const User = () => {
       where(documentId(), "!=", user.id)
     );
     const count = await getCountFromServer(userSameEmail);
-    if (count.data().count === 0) {
+    if (value.phone[0] !== 0) {
+      toast.error("Số điện thoại phải bắt đầu bằng 0");
+      return;
+    } else if (count.data().count === 0) {
       handleUpdate({ path: "users", id: user.id, data: value });
       return;
     } else {
