@@ -18,6 +18,7 @@ import { useParams } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { useShowError } from "../../../hooks/useValid";
 
 const pathRegExp = /^[A-Za-z0-9_.]+$/;
 
@@ -28,22 +29,22 @@ const schema = yup.object().shape({
     .required("Vui lòng chọn danh mục"),
   path: yup
     .string()
-    .matches(pathRegExp, "Path không đúng chuẩn")
-    .required("Hãy nhập path"),
+    .required("Hãy nhập path")
+    .matches(pathRegExp, "Path không đúng chuẩn"),
   name: yup.string().required("Vui lòng nhập tên sản phẩm"),
   price: yup
     .number()
-    .min(1, "Giá sản phẩm phải lớn hơn 1")
-    .required("Vui lòng nhập giá sản phẩm"),
+    .required("Vui lòng nhập giá sản phẩm")
+    .min(1, "Giá sản phẩm phải lớn hơn 1"),
   count: yup
     .number()
-    .min(0, "Số lượng sản phẩm không phải số âm")
-    .required("Vui lòng nhập số lượng sản phẩm"),
+    .required("Vui lòng nhập số lượng sản phẩm")
+    .min(0, "Số lượng sản phẩm không phải số âm"),
   discount: yup
     .number()
+    .required("Vui lòng nhập phần trăm giảm giá")
     .min(0, "Phần trăm giảm giá nhỏ nhất là 0")
-    .max(100, "Phần trăm giảm giá lớn nhất là 100")
-    .required("Vui lòng nhập phần trăm giảm giá"),
+    .max(100, "Phần trăm giảm giá lớn nhất là 100"),
 });
 
 const ProductForm = ({ type }) => {
@@ -68,6 +69,7 @@ const ProductForm = ({ type }) => {
   const [handleAddDoc] = useAddDoc();
   const [handleUpdateDoc] = useUpdateDoc();
   const { id } = type === "update" && useParams();
+  const [handleShowErr] = useShowError(errors);
 
   const handleUploadImage = (file) => {
     if (file) {
@@ -137,9 +139,7 @@ const ProductForm = ({ type }) => {
     }
   }, [product]);
   useEffect(() => {
-    const errList = Object.values(errors);
-
-    errList.length > 0 && toast.error(errList[0].message);
+    handleShowErr();
   }, [errors]);
 
   const handleSelectChange = (e) => {

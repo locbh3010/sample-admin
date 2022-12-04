@@ -19,8 +19,8 @@ const schema = yup.object().shape({
   name: yup.string().required("Vui lòng nhập tên danh mục"),
   path: yup
     .string()
-    .matches(pathRegExp, "Sai định dạng đường dẫn")
-    .required("Vui lòng nhập đương dẫn"),
+    .required("Vui lòng nhập đương dẫn")
+    .matches(pathRegExp, "Sai định dạng đường dẫn"),
 });
 
 const CategoryForm = ({ type }) => {

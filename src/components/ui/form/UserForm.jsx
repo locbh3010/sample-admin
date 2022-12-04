@@ -13,15 +13,35 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { db } from "../../../configs/firebase-configs";
 import Input from "../input/Input";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useShowError } from "../../../hooks/useValid";
 
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Nhập email chưa đúng")
+    .required("Vui lòng nhập email"),
+  password: yup
+    .string()
+    .required("Mật khẩu không được để trống")
+    .min(6, "Mật khẩu ít nhất 6 ký tự"),
+});
 const UserForm = () => {
-  const { control, handleSubmit, setValue } = useForm({
-    mode: onchange,
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
   });
   const [type, setType] = useState("hidden");
   const [filter] = useSearchParams();
   const [id, setId] = useState(null);
   const navigate = useNavigate();
+  const [handleShowErr] = useShowError(errors);
 
   useEffect(() => {
     if (filter.get("update")) {
@@ -30,7 +50,6 @@ const UserForm = () => {
     } else if (filter.get("add")) setType("add");
     else setType("hidden");
   }, [filter]);
-
   useEffect(() => {
     if (type === "update" && id) {
       const userRef = doc(collection(db, "users"), id);
@@ -44,6 +63,9 @@ const UserForm = () => {
       });
     }
   }, [id]);
+  useEffect(() => {
+    handleShowErr();
+  }, [errors]);
 
   const handleAddUser = (value) => {
     const usersRef = query(

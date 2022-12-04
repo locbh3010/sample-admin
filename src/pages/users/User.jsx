@@ -1,4 +1,12 @@
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  documentId,
+  getCountFromServer,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -7,16 +15,42 @@ import CommentUi from "../../components/ui/comment/CommentUi";
 import Input from "../../components/ui/input/Input";
 import { db, storage } from "../../configs/firebase-configs";
 import { useUpdateDoc } from "../../hooks/firestore-hook";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useShowError } from "../../hooks/useValid";
+import { nameRegExp, phoneRegExp, titleCase } from "../../utils/function";
+import { toast } from "react-toastify";
 
+const schema = yup.object().shape({
+  fullname: yup
+    .string()
+    .required("Vui lòng nhập họ tên")
+    .matches(nameRegExp, "Họ tên không có ký tự đặc biệt"),
+  email: yup
+    .string()
+    .required("Vui lòng nhập email")
+    .email("Email sai định dạng"),
+  phone: yup
+    .string()
+    .required("Vui lòng nhập số điện thoại")
+    .matches(phoneRegExp, "Số điện thoại không đúng"),
+});
 const User = () => {
-  const { control, setValue, handleSubmit } = useForm({
-    mode: onchange,
+  const {
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(schema),
   });
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [avatar, setAvatar] = useState(null);
   const [handleUpdate] = useUpdateDoc();
   const [comments, setComments] = useState([]);
+  const [handleShowErr] = useShowError(errors);
 
   useEffect(() => {
     if (id) {
@@ -44,9 +78,25 @@ const User = () => {
       });
     }
   }, [id]);
+  useEffect(() => {
+    handleShowErr();
+  }, [errors]);
 
-  const handleUpdateUser = (value) => {
-    handleUpdate({ path: "users", id: user.id, data: value });
+  const handleUpdateUser = async (value) => {
+    value.fullname = titleCase(value.fullname);
+    const userSameEmail = query(
+      collection(db, "users"),
+      where("email", "==", value.email),
+      where(documentId(), "!=", user.id)
+    );
+    const count = await getCountFromServer(userSameEmail);
+    if (count.data().count === 0) {
+      handleUpdate({ path: "users", id: user.id, data: value });
+      return;
+    } else {
+      toast.error("Email bị trùng lặp");
+      return;
+    }
   };
   const handleUploadImage = (file) => {
     if (file) {
@@ -116,7 +166,7 @@ const User = () => {
           <form onSubmit={handleSubmit(handleUpdateUser)}>
             <div className="grid grid-cols-2 gap-4 grid-flow-row auto-rows-fr mb-12">
               <Input name="fullname" control={control} display="Họ và tên" />
-              <Input name="username" control={control} display="User name" />
+              {/* <Input name="username" control={control} display="User name" /> */}
               <Input name="email" control={control} display="Email" />
               <Input name="phone" control={control} display="Số điện thoại" />
             </div>
