@@ -15,13 +15,53 @@ import InputFile from "../input/InputFile";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../../contexts/AuthContext";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
+
+const pathRegExp = /^[A-Za-z0-9_.]+$/;
+const nameRegExp = /^[A-Za-z0-9 ]+$/;
+
+const schema = yup.object().shape({
+  cateId: yup
+    .string()
+    .notOneOf([0, "0"], "Vui lòng chọn danh mục")
+    .required("Vui lòng chọn danh mục"),
+  path: yup
+    .string()
+    .matches(pathRegExp, "Path không đúng chuẩn")
+    .required("Hãy nhập path"),
+  name: yup
+    .string()
+    .matches(nameRegExp, "Tên sản phẩm không được chứa ký tự đặc biệt")
+    .required("Vui lòng nhập tên sản phẩm"),
+  price: yup
+    .number()
+    .min(1, "Giá sản phẩm phải lớn hơn 1")
+    .required("Vui lòng nhập giá sản phẩm"),
+  count: yup
+    .number()
+    .min(0, "Số lượng sản phẩm không phải số âm")
+    .required("Vui lòng nhập số lượng sản phẩm"),
+  discount: yup
+    .number()
+    .min(0, "Phần trăm giảm giá nhỏ nhất là 0")
+    .max(100, "Phần trăm giảm giá lớn nhất là 100")
+    .required("Vui lòng nhập phần trăm giảm giá"),
+});
 
 const ProductForm = ({ type }) => {
-  const navigate = useNavigate();
   const [product, setProduct] = useState([]);
-  const { control, handleSubmit, setValue, watch, getValues } = useForm({
-    mode: onchange,
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schema),
   });
   const [state, setState] = useState({
     categories: [],
@@ -32,7 +72,6 @@ const ProductForm = ({ type }) => {
   const [handleAddDoc] = useAddDoc();
   const [handleUpdateDoc] = useUpdateDoc();
   const { id } = type === "update" && useParams();
-  const { user } = useAuth();
 
   const handleUploadImage = (file) => {
     if (file) {
@@ -48,6 +87,7 @@ const ProductForm = ({ type }) => {
   const handleAdd = (values) => {
     values.images = images;
     values.price = +values.price;
+    console.log(values);
 
     handleAddDoc("products", values);
   };
@@ -102,11 +142,20 @@ const ProductForm = ({ type }) => {
       setImages(product.images);
     }
   }, [product]);
+  useEffect(() => {
+    const errList = Object.values(errors);
+
+    errList.length > 0 && toast.error(errList[0].message);
+  }, [errors]);
 
   const handleSelectChange = (e) => {
     setValue("cateId", e.target.value);
     const docRef = doc(categoryRef, e.target.value);
-    getDoc(docRef).then((res) => setValue("cateName", res.data().name));
+    getDoc(docRef).then((res) => {
+      if (res.data()?.name) {
+        setValue("cateName", res.data().name);
+      } else toast.error("Vui lòng chọn danh mục");
+    });
   };
 
   return (
@@ -164,6 +213,7 @@ const ProductForm = ({ type }) => {
             type="number"
             name="count"
             control={control}
+            defaultValue={1}
             display="Số lượng sản phẩm"
             placeholder="Nhập số lượng sản phẩm"
           />
@@ -173,6 +223,7 @@ const ProductForm = ({ type }) => {
             control={control}
             display="Giảm giá"
             placeholder="Nhập phần trăm giảm giá"
+            defaultValue={0}
             min={0}
             max={100}
           />
@@ -181,7 +232,7 @@ const ProductForm = ({ type }) => {
           <Editor control={control} name="description"></Editor>
         </div>
         <div className="mb-10">
-          {watchPath && (
+          {watchPath && !errors.path && (
             <InputFile name="images" multiple onChange={handleInputChange} />
           )}
         </div>

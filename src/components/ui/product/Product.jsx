@@ -34,7 +34,7 @@ export function ProductItem({ data }) {
       </div>
       {/* hình ảnh */}
       <div
-        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video bg-gray-200"
+        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video bg-slate-300"
         onClick={handleNavigate}
       >
         <img
@@ -44,7 +44,7 @@ export function ProductItem({ data }) {
         />
       </div>
       {/* thông tin */}
-      <div className="flex-1 px-3 py-4">
+      <div className="flex-1 px-3 py-4 ">
         <span className="text-sm text-blue-500 font-bold mb-0.5 py-1 px-2 bg-gray-800/10 rounded">
           {data.cateName}
         </span>

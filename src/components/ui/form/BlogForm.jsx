@@ -136,7 +136,14 @@ const BlogForm = ({ type = "add" }) => {
               onChange={handleInputChange}
             />
           </div>
-          <Editor name="description" control={control} />
+          <div className="flex flex-col gap-2 py-4">
+            <label htmlFor="description">Mô tả</label>
+            <Editor name="description" control={control} />
+          </div>
+          <div className="flex flex-col gap-2 py-4">
+            <label htmlFor="content">Nội dung</label>
+            <Editor name="content" control={control} />
+          </div>
 
           <Button
             type="submit"
