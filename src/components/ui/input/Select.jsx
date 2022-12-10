@@ -10,7 +10,7 @@ const Select = ({ name, control, children, ...props }) => {
     <select
       name={name}
       id={name}
-      className="py-4 w-full px-4 appearance-none rounded bg-white/80 border border-gray-300 outline-none duration-300 focus:shadow-md font-medium text-slate-800 focus:border-blue-500"
+      className="select font-medium select-bordered"
       {...props}
     >
       {children}

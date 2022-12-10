@@ -80,7 +80,7 @@ const Item = ({ order }) => {
           </th>
           <td className="py-4 px-6 relative">
             <div
-              className={`flex items-center justify-center p-3 text-white bg-blue-500 rounded-full cursor-pointer absolute left-0  top-1/2 -translate-y-1/2 duration-300 -translate-x-[90%] ${
+              className={`btn btn-primary btn-circle absolute top-1/2 left-0 -translate-y-1/2 -translate-x-[80%] z-[30] ${
                 status && status !== data.status
                   ? "opacity-100 visible"
                   : "opacity-0 invisible"
@@ -138,7 +138,7 @@ const Item = ({ order }) => {
               className="flex items-center justify-center w-12 h-12 text-white bg-red-500 rounded-full cursor-pointer absolute left-0 -translate-y-1/2 top-1/2 -translate-x-[calc(100%+20px)] duration-300 hover:bg-red-400"
               onClick={handleDeleteOrder}
             >
-              <Trash width="20px" />
+              <Trash />
             </td>
           )}
         </tr>
@@ -300,7 +300,7 @@ const Orders = () => {
             <option value="month">30 ngày trước</option>
           </Select>
         </div>
-        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <table className="table min-w-full">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="py-3 px-6">

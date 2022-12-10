@@ -38,7 +38,7 @@ const Users = () => {
         <div className="mt-16">
           <div className="bg-white p-1 mb-4 inline-flex rounded-full gap-1">
             <button
-              className="duration-300 rounded-full px-6 py-2 font-semibold hover:bg-gray-100 text-slate-800"
+              className="btn btn-primary rounded-full px-6"
               onClick={() => {
                 navigate({ pathname: "/users", search: "?add=true" });
               }}

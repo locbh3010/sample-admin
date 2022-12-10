@@ -11,11 +11,13 @@ import { useAddDoc, useUpdateDoc } from "../../../hooks/firestore-hook";
 import { useAuth } from "../../../contexts/AuthContext";
 import { collection, doc, onSnapshot, Timestamp } from "firebase/firestore";
 import { useParams } from "react-router-dom";
+import Select from "../input/Select";
 
 const BlogForm = ({ type = "add" }) => {
-  const { control, handleSubmit, getValues, setValue, watch } = useForm({
-    mode: onchange,
-  });
+  const { control, handleSubmit, getValues, setValue, watch, register } =
+    useForm({
+      mode: onchange,
+    });
   const { id } = type === "update" && useParams();
   const [image, setImage] = useState(null);
   const watchSlug = watch("slug");
@@ -89,12 +91,20 @@ const BlogForm = ({ type = "add" }) => {
         )}
       >
         <div className="max-w-2xl mx-auto py-8 flex flex-col gap-6">
-          <Input
-            control={control}
-            name="categories"
-            placeholder="Nhập loại blog"
-            display="Loại blog"
-          />
+          <div className="form-control">
+            <label htmlFor="categories" className="label">
+              Danh muc blog
+            </label>
+            <Select control={control} name="categories" id="categories">
+              <option disabled selected>
+                Chon danh muc
+              </option>
+              <option value="fashion">Fashion</option>
+              <option value="style">style</option>
+              <option value="accessories">Accessories</option>
+              <option value="season">Season</option>
+            </Select>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Input
               control={control}
@@ -138,7 +148,14 @@ const BlogForm = ({ type = "add" }) => {
           </div>
           <div className="flex flex-col gap-2 py-4">
             <label htmlFor="description">Mô tả</label>
-            <Editor name="description" control={control} />
+            <textarea
+              name="description"
+              id="description"
+              cols="30"
+              rows="10"
+              className="textarea textarea-bordered"
+              {...register("description")}
+            ></textarea>
           </div>
           <div className="flex flex-col gap-2 py-4">
             <label htmlFor="content">Nội dung</label>

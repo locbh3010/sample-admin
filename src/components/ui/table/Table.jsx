@@ -7,7 +7,7 @@ import Pencil from "../../icon/Pencil";
 import Trash from "../../icon/Trash";
 
 export function Table({ children }) {
-  return <table className="min-w-full">{children}</table>;
+  return <table className="min-w-full table">{children}</table>;
 }
 
 export function Th({ children }) {
@@ -58,7 +58,7 @@ export function UserItem({ data, index }) {
       </Td>
       <Td>{data.id}</Td>
       <Td>{data.email}</Td>
-      <Td>{data.username}</Td>
+      <Td>{data.fullname}</Td>
       <Td>
         <div className="flex items-center gap-2">
           <button

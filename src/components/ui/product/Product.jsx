@@ -28,48 +28,42 @@ export function ProductItem({ data }) {
   };
 
   return (
-    <div className="w-full rounded-lg bg-white shadow flex flex-col relative duration-300 hover:shadow-xl">
+    <div className="card group">
       <div className="absolute top-2 left-2 bg-gray-500/50 rounded text-white z-30 font-bold w-10 h-10 flex-center text-lg">
         {data.count}
       </div>
       {/* hình ảnh */}
-      <div
-        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video bg-slate-300"
+      <figture
+        className="overflow-hidden rounded-t-lg flex-shrink-0 aspect-video bg-slate-300 cursor-pointer"
         onClick={handleNavigate}
       >
         <img
           src={data.images[0]}
           alt=""
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover duration-300 ease-linear group-hover:scale-125"
         />
-      </div>
+      </figture>
       {/* thông tin */}
-      <div className="flex-1 px-3 py-4 ">
-        <span className="text-sm text-blue-500 font-bold mb-0.5 py-1 px-2 bg-gray-800/10 rounded">
+      <div className="card-body p-0 px-2 py-3">
+        <span className="badge badge-primary bg-opacity-20 border-0 text-blue-500">
           {data.cateName}
         </span>
-        <p
-          className="font-bold text-2xl capitalize line-clamp-1"
-          onClick={handleNavigate}
-        >
+        <p className="card-title line-clamp-1" onClick={handleNavigate}>
           {data.name}
         </p>
         <span
-          className="text-gray-500 line-clamp-3 font-medium mb-4"
+          className="text-gray-400 line-clamp-3 font-medium mb-4"
           ref={descriptionEle}
         ></span>
 
-        <div className="grid grid-cols-2 gap-3 mt-auto">
+        <div className="card-actions grid w-full grid-cols-2 gap-2">
           <button
-            className="w-full flex-center py-3 bg-blue-500 text-white rounded duration-300 hover:bg-blue-400"
+            className="btn btn-info text-white bg-blue-500"
             onClick={handleNavigate}
           >
             <Pencil></Pencil>
           </button>
-          <button
-            className="w-full py-3 bg-red-500 text-white flex-center rounded"
-            onClick={handleDelete}
-          >
+          <button className="btn btn-error text-white" onClick={handleDelete}>
             <Trash />
           </button>
         </div>

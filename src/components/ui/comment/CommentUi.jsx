@@ -31,7 +31,7 @@ const CommentUi = ({ comment }) => {
     detailRef.current.classList.add("hidden");
   };
   const handleUpdate = () => {
-    if (update) {
+    if (update !== "<p></br></p>") {
       const commentReference = doc(collection(db, "comments"), id);
 
       data.comment = commentUpdate || data.comment;
@@ -75,9 +75,9 @@ const CommentUi = ({ comment }) => {
   return (
     <div className="w-full">
       <div className="bg-white px-4 py-6 rounded shadow">
-        <div className="mb-10 flex items-center gap-2">
+        <div className="btn-group mb-10 gap-1">
           <button
-            className="bg-green-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md"
+            className="btn btn-square btn-success text-white"
             onClick={handleToggleDetail}
           >
             <svg
@@ -100,14 +100,11 @@ const CommentUi = ({ comment }) => {
               />
             </svg>
           </button>
-          <button
-            className="bg-blue-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md"
-            onClick={handleUpdate}
-          >
+          <button className="btn btn-primary btn-square" onClick={handleUpdate}>
             <Pencil />
           </button>
           <button
-            className="bg-red-500 rounded w-10 h-10 text-white flex items-center justify-center duration-300 hover:shadow-md"
+            className="btn btn-square btn-error text-white"
             onClick={handleDeleteComment}
           >
             <Trash />

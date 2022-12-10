@@ -231,10 +231,7 @@ const ProductForm = ({ type }) => {
           )}
         </div>
         <div className="w-full flex-center">
-          <button
-            type="submit"
-            className="px-6 py-4 bg-blue-500 duration-300 hover:bg-blue-400 rounded text-white text-lg font-semibold capitalize"
-          >
+          <button type="submit" className="btn btn-primary">
             {type === "add" ? "thêm" : "cập nhật"} sản phẩm
           </button>
         </div>

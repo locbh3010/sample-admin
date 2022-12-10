@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Pencil from "../../icon/Pencil";
 import { useNavigate } from "react-router-dom";
-import Button from "../button/Button";
 import Trash from "../../icon/Trash";
-import PropTypes from "prop-types";
 import { useDeleteDoc } from "../../../hooks/firestore-hook";
 import {
   collection,
@@ -47,35 +45,36 @@ export const CategoryItem = React.memo(({ data }) => {
   }, []);
 
   return (
-    <div className="flex bg-white rounded-lg shadow w-full duration-300 hover:shadow-lg">
-      <div
-        className="flex-shrink-0 aspect-square overflow-hidden rounded-l-lg h-full basis-[40%]"
+    <div className="card flex-row card-bordered hover:shadow transition overflow-hidden group">
+      <figure
+        className="aspect-square overflow-hidden bg-base-200 rounded-none flex-shrink-0 basis-2/5 cursor-pointer"
         onClick={handleNavigate}
       >
-        <img src={data.image} alt="" className="w-full h-full object-cover" />
-      </div>
-      <div className="flex-1 px-3 py-4 flex flex-col">
+        <img
+          src={data.image}
+          alt=""
+          className="w-full h-full object-cover transition-all duration-300 ease-in-out group-hover:scale-125"
+        />
+      </figure>
+      <div className="card-body py-4 px-3">
         <div>
-          <span className="text-2xl text-slate-900 capitalize mb-2 line-clamp-1 font-medium">
-            {data.name}
-          </span>
+          <span className="card-title cursor-pointer">{data.name}</span>
           <span className="text-gray-400 font-bold block">
             Tổng số sản phẩm: {count}
           </span>
         </div>
-        <div className="mt-auto flex items-center gap-3">
-          <button className="btn-update" onClick={handleNavigate}>
+        <div className="mt-auto w-full grid grid-cols-2 gap-2">
+          <button className="btn btn-info text-white" onClick={handleNavigate}>
             <Pencil></Pencil>
           </button>
-          <Button variant="remove" onClick={handleDeleteCategory}>
+          <button
+            className="btn-error text-white btn"
+            onClick={handleDeleteCategory}
+          >
             <Trash />
-          </Button>
+          </button>
         </div>
       </div>
     </div>
   );
 });
-
-CategoryItem.propTypes = {
-  data: PropTypes.object.isRequired,
-};

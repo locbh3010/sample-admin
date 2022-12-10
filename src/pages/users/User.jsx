@@ -92,10 +92,7 @@ const User = () => {
       where(documentId(), "!=", user.id)
     );
     const count = await getCountFromServer(userSameEmail);
-    if (value.phone[0] !== 0) {
-      toast.error("Số điện thoại phải bắt đầu bằng 0");
-      return;
-    } else if (count.data().count === 0) {
+    if (count.data().count === 0) {
       handleUpdate({ path: "users", id: user.id, data: value });
       return;
     } else {
