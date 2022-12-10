@@ -57,6 +57,9 @@ const BlogForm = ({ type = "add" }) => {
     const timestampNow = Timestamp.fromDate(date);
     value.createAt = timestampNow;
     value.email = user.email;
+    if (value.comment === "<p><br></p>") {
+      return;
+    }
 
     handleAddDoc("blogs", value);
   };

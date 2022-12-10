@@ -2,7 +2,7 @@ import React from "react";
 import { useController } from "react-hook-form";
 
 const Select = ({ name, control, children, ...props }) => {
-  const {} = useController({
+  const { field } = useController({
     name,
     control,
   });
@@ -11,6 +11,7 @@ const Select = ({ name, control, children, ...props }) => {
       name={name}
       id={name}
       className="select font-medium select-bordered"
+      {...field}
       {...props}
     >
       {children}
