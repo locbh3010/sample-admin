@@ -1,5 +1,6 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Blog from "./pages/blog/Blog";
 import Blogs from "./pages/blogs/Blogs";
@@ -16,6 +17,14 @@ import User from "./pages/users/User";
 import Users from "./pages/users/Users";
 
 const App = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    document.documentElement.scrollTo({
+      top: 0,
+      left: 0,
+    });
+  }, [pathname]);
   return (
     <div>
       <Routes>
